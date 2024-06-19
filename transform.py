@@ -21,13 +21,25 @@ def brighten(image, factor):
     #             new_im.array[x, y, c] = image.array[x, y, c] * factor
 
     # vectorised version
-    new_im.array = image.array*factor
+    new_im.array = image.array * factor
     return new_im
 
 
 def adjust_contrast(image, factor, mid):
     # adjust the contrast by increasing the difference from the user-defined midpoint by factor amount
+    x_pixels, y_pixels, num_channels = image.array.shape
+    new_im = Image(x_pixels=x_pixels, y_pixels=y_pixels,
+                   num_channels=num_channels)  # making a new array to copy values to!
 
+    for x in range(x_pixels):
+        for y in range(y_pixels):
+            for c in range(num_channels):
+                new_im.array[x, y, c] = (image.array[x, y, c] - mid) * factor + mid
+
+    # vectorised version
+    # new_im.array = (image.array - mid) * factor + mid
+
+    return new_im
 
 
 def blur(image, kernel_size):
@@ -64,3 +76,11 @@ if __name__ == '__main__':
     # darken the lake
     darkened_im = brighten(lake, 0.3)
     darkened_im.write_image("darkened lake.png")
+
+    # increase the contrast for the lake
+    incr_contrast = adjust_contrast(lake, 2, 0.5)
+    incr_contrast.write_image("increased contrast.png")
+
+    # decrease the contrast for the lake
+    decr_contrast = adjust_contrast(lake, 0.5, 0.5)
+    decr_contrast.write_image("decreased contrast.png")
