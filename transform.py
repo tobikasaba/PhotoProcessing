@@ -15,17 +15,19 @@ def brighten(image, factor):
                    num_channels=num_channels)  # making a new array to copy values to!
 
     # this is the most intuitive way to do this (non-vectorised)
-    for x in range(x_pixels):
-        for y in range(y_pixels):
-            for c in range(num_channels):
-                new_im.array[x, y, c] = image.array[x, y, c] * factor
+    # for x in range(x_pixels):
+    #     for y in range(y_pixels):
+    #         for c in range(num_channels):
+    #             new_im.array[x, y, c] = image.array[x, y, c] * factor
 
+    # vectorised version
+    new_im.array = image.array*factor
     return new_im
 
 
 def adjust_contrast(image, factor, mid):
     # adjust the contrast by increasing the difference from the user-defined midpoint by factor amount
-    pass
+
 
 
 def blur(image, kernel_size):
