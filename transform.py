@@ -44,9 +44,26 @@ def adjust_contrast(image, factor, mid):
 
 def blur(image, kernel_size):
     # kernel size is the number of pixels to take into account when applying the blur
-    # (ie kernel_size = 3 would be neighbors to the left/right, top/bottom, and diagonals)
+    # (i.e. kernel_size = 3 would be neighbours to the left/right, top/bottom, and diagonals)
     # kernel size should always be an *odd* number
-    pass
+    x_pixels, y_pixels, num_channels = image.array.shape
+    new_im = Image(x_pixels=x_pixels, y_pixels=y_pixels,
+                   num_channels=num_channels)  # making a new array to copy values to!
+
+    neighbor_range = kernel_size // 2  # how many neighbours to one side we need to look at
+
+    for x in range(x_pixels):
+        for y in range(y_pixels):
+            for c in range(num_channels):
+                # we are going to use a naive implementation of iterating through each neighbour and summing
+                # there are faster implementations where you can use memoization,
+                # but this is the most straightforward for a beginner to understand
+                total = 0
+                for x_i in range(max(0, x - neighbor_range), min(x_pixels - 1, x + neighbor_range) + 1):
+                    for y_i in range(max(0, y - neighbor_range), min(y_pixels - 1, y + neighbor_range) + 1):
+                        total += image.array[x_i, y_i, c]
+                new_im.array[x, y, c] = total / (kernel_size ** 2)  # average
+    return new_im
 
 
 def apply_kernel(image, kernel):
@@ -84,3 +101,11 @@ if __name__ == '__main__':
     # decrease the contrast for the lake
     decr_contrast = adjust_contrast(lake, 0.5, 0.5)
     decr_contrast.write_image("decreased contrast.png")
+
+    # blur using kernel 3
+    blur_3 = blur(city, 3)
+    blur_3.write_image('blur_k3.png')
+
+    # blur using kernel size of 15
+    blur_15 = blur(city, 300)
+    blur_15.write_image('blur_k15.png')
