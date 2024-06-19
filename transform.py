@@ -107,5 +107,5 @@ if __name__ == '__main__':
     blur_3.write_image('blur_k3.png')
 
     # blur using kernel size of 15
-    blur_15 = blur(city, 300)
+    blur_15 = blur(city, 15)
     blur_15.write_image('blur_k15.png')
