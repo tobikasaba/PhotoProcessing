@@ -13,7 +13,9 @@ Programmer Beast Mode Spotify playlist: https://open.spotify.com/playlist/4Akns5
 import numpy as np
 import png
 
+
 class Image:
+
     def __init__(self, x_pixels=0, y_pixels=0, num_channels=0, filename=''):
         # you need to input either filename OR x_pixels, y_pixels, and num_channels
         self.input_path = 'input/'
@@ -30,7 +32,8 @@ class Image:
             self.array = self.read_image(filename)
             self.x_pixels, self.y_pixels, self.num_channels = self.array.shape
         else:
-            raise ValueError("You need to input either a filename OR specify the dimensions of the image")
+            raise ValueError(
+                "You need to input either a filename OR specify the dimensions of the image")
 
     def read_image(self, filename, gamma=2.2):
         '''
@@ -49,13 +52,13 @@ class Image:
         '''
         im = np.clip(self.array, 0, 1)
         y, x = self.array.shape[0], self.array.shape[1]
-        im = im.reshape(y, x*3)
+        im = im.reshape(y, x * 3)
         writer = png.Writer(x, y)
         with open(self.output_path + output_file_name, 'wb') as f:
-            writer.write(f, 255*(im**(1/gamma)))
+            writer.write(f, 255 * (im ** (1 / gamma)))
 
         self.array.resize(y, x, 3)  # we mutated the method in the first step of the function
-        
+
 
 if __name__ == '__main__':
     im = Image(filename='lake.png')
